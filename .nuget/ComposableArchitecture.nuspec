@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>SelfStudio.ComposableArchitecture</id>
-        <version>0.0.7</version>
+        <version>0.0.13</version>
         <title>SelfStudio.ComposableArchitecture</title>
         <authors>LincolnLaw</authors>
         <owners>LincolnLaw</owners>
@@ -15,11 +15,11 @@
         <language>en-US</language>
         <license type="expression">MIT</license>
         <projectUrl>https://github.com/CodeEagle/ComposableArchitecture.git</projectUrl>
-          <dependencies>
-            <group targetFramework=".net8.0" />
-            </dependencies>
+        <dependencies>
+            <group targetFramework=".NETStandard2.1" />
+        </dependencies>
     </metadata>
     <files>
-        <file src="obj/Release/net8.0/ComposableArchitecture.dll" target="lib/net8.0" />
+        <file src="../obj/Release/netstandard2.1/ComposableArchitecture.dll" target="lib/netstandard2.1" />
     </files>
 </package>
