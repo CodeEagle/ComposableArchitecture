@@ -10,5 +10,4 @@ dotnet publish
 echo "Packing ComposableArchitecture..."
 nuget pack ComposableArchitecture.nuspec
 echo "Pushing ComposableArchitecture..."
-dotnet nuget push "bin/Release/SelfStudio.ComposableArchitecture.
-$VERSION.nupkg"  -k $KEY --source  https://api.nuget.org/v3/index.json
+dotnet nuget push "bin/Release/SelfStudio.ComposableArchitecture.$VERSION.nupkg"  -k $KEY --source  https://api.nuget.org/v3/index.json
