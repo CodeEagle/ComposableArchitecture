@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using UniRx;
+using System.Threading.Tasks;
 
 #pragma warning disable CS8632
 
@@ -13,13 +12,13 @@ namespace SelfStudio.ComposableArchitecture {
         private readonly LogicCompatible<IState, IAction> _logic;
         private IState _previousState;
         private readonly List<IMiddlewareCompatible<IState, IAction>> _middleware;
-        public readonly Subject<StateChangedInfo<IState, IChangeEvent>> stateStream;
+        public readonly Stream<StateChangedInfo<IState, IChangeEvent>> stateStream;
 
         public Store(Func<LogicCompatible<IState, IAction>> initialLogic, List<IMiddlewareCompatible<IState, IAction>>? middleware = null) {
             _logic = initialLogic();
             _middleware = middleware ?? new List<IMiddlewareCompatible<IState, IAction>>();
             _previousState = _logic.State.Copy();
-            stateStream = new Subject<StateChangedInfo<IState, IChangeEvent>>();
+            stateStream = new Stream<StateChangedInfo<IState, IChangeEvent>>();
         }
 
         public async Task Send(IAction action) {
@@ -86,8 +85,47 @@ namespace SelfStudio.ComposableArchitecture {
         C[] Diff(T old);
         T Copy();
     }
-
     public interface IMiddlewareCompatible<IState, IAction> {
         Task<IAction> BeforeReduce(IAction action, IState state);
+    }
+
+
+    public class Stream<T> : IObservable<T> {
+        private readonly List<IObserver<T>> _observers = new();
+
+        public IDisposable Subscribe(IObserver<T> observer) {
+            if (!_observers.Contains(observer))
+                _observers.Add(observer);
+            return new Unsubscriber(_observers, observer);
+        }
+
+        public void OnNext(T value) {
+            foreach (var observer in _observers)
+                observer.OnNext(value);
+        }
+
+        public void Complete() {
+            foreach (var observer in _observers.ToArray())
+                if (_observers.Contains(observer))
+                    observer.OnCompleted();
+
+            _observers.Clear();
+        }
+
+
+        private class Unsubscriber : IDisposable {
+            private readonly List<IObserver<T>> _observers;
+            private readonly IObserver<T> _observer;
+
+            public Unsubscriber(List<IObserver<T>> observers, IObserver<T> observer) {
+                _observers = observers;
+                _observer = observer;
+            }
+
+            public void Dispose() {
+                if (_observer != null && _observers.Contains(_observer))
+                    _observers.Remove(_observer);
+            }
+        }
     }
 }

@@ -1,7 +1,7 @@
+#pragma warning disable CS8632
+
 using System;
 using System.Threading.Tasks;
-
-#pragma warning disable CS8632
 
 namespace SelfStudio.ComposableArchitecture {
     public class Effect<IAction> {

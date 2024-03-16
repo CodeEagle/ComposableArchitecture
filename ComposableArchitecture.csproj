@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>   
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>SelfStudio.ComposableArchitecture</PackageId>
+    <Version>0.0.7</Version>
+    <Authors>LincolnLaw</Authors>
+    <Company>SelfStudio</Company>
+    <OutputType>Library</OutputType>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+</Project>

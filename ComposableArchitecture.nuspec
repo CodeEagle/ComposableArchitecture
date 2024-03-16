@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>SelfStudio.ComposableArchitecture</id>
+        <version>0.0.7</version>
+        <title>SelfStudio.ComposableArchitecture</title>
+        <authors>LincolnLaw</authors>
+        <owners>LincolnLaw</owners>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>ComposableArchitecture for C#</description>
+        <releaseNotes>
+            <![CDATA[
+            ]]>
+        </releaseNotes>
+        <language>en-US</language>
+        <license type="expression">MIT</license>
+        <projectUrl>https://github.com/CodeEagle/ComposableArchitecture.git</projectUrl>
+          <dependencies>
+            <group targetFramework=".net8.0" />
+            </dependencies>
+    </metadata>
+    <files>
+        <file src="obj/Release/net8.0/ComposableArchitecture.dll" target="lib/net8.0" />
+    </files>
+</package>

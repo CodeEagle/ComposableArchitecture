@@ -1,0 +1,17 @@
+# top-most EditorConfig file
+root = true
+
+[*.cs]
+csharp_new_line_before_open_brace = none
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_finally = false
+
+trim_trailing_whitespace = true
+insert_final_newline = true
+format_on_save = true
+dotnet_diagnostic.IDE1006.severity = none
+dotnet_diagnostic.UNT0008.severity = none
+dotnet_diagnostic.UNT0026.severity = none
+dotnet_diagnostic.IDE0270.severity = none
+dotnet_diagnostic.CS8618.severity = none

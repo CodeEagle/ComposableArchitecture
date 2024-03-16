@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
-
 #pragma warning disable CS8632
+
+using System.Threading.Tasks;
 
 namespace SelfStudio.ComposableArchitecture {
 
@@ -8,6 +8,5 @@ namespace SelfStudio.ComposableArchitecture {
         public IState State { get; }
         public abstract Task<Effect<IAction?>?> Reduce<T>(T action) where T : IAction;
         public virtual void Dispose() { }
-
     }
 }
