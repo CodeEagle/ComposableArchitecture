@@ -1,14 +1,19 @@
 #!/bin/bash
 # This script is used to generate the package for the ComposableArchitecture.
 KEY=`echo $NUGET_API_KEY`
-VERSION="0.0.14" 
+VERSION=$1
 # replace the version in the nuspec file
 sed -i '' "s/<version>.*<\/version>/<version>$VERSION<\/version>/g" ComposableArchitecture.nuspec
 cd ..
 sed -i '' "s/<Version>.*<\/Version>/<Version>$VERSION<\/Version>/g" ComposableArchitecture.csproj
 echo "Publishing ComposableArchitecture..." 
-dotnet publish -c Release 
-echo "Packing ComposableArchitecture..."
+
+TARGET_ARRAY=("netstandard2.1" "net8.0" "netcoreapp3.1")
+for TARGET in ${TARGET_ARRAY[@]};do
+    dotnet publish -c Release -f $TARGET
+    echo "Packing ComposableArchitecture..."
+done
+
 cd -
 nuget pack ComposableArchitecture.nuspec
 echo "Pushing ComposableArchitecture..."
