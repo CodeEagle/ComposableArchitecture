@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 #pragma warning disable CS8632
@@ -9,12 +8,12 @@ namespace SelfStudio.ComposableArchitecture {
     public delegate Task StoreDispatcher<Action>(Action action);
 
     public class Store<IState, IAction, IChangeEvent> where IState : IStateCompatible<IState, IChangeEvent> {
-        private readonly LogicCompatible<IState, IAction> _logic;
+        private readonly ILogicCompatible<IState, IAction> _logic;
         private IState _previousState;
         private readonly List<IMiddlewareCompatible<IState, IAction>> _middleware;
         public readonly Stream<StateChangedInfo<IState, IChangeEvent>> stateStream;
 
-        public Store(Func<LogicCompatible<IState, IAction>> initialLogic, List<IMiddlewareCompatible<IState, IAction>>? middleware = null) {
+        public Store(Func<ILogicCompatible<IState, IAction>> initialLogic, List<IMiddlewareCompatible<IState, IAction>>? middleware = null) {
             _logic = initialLogic();
             _middleware = middleware ?? new List<IMiddlewareCompatible<IState, IAction>>();
             _previousState = _logic.State.Copy();
@@ -56,10 +55,10 @@ namespace SelfStudio.ComposableArchitecture {
 
         private void Dispatch(IState state) {
             var changes = state.Diff(_previousState);
-            if (!changes.Any()) {
+            if (changes == null || changes.Length == 0) {
                 return;
             }
-            var info = new StateChangedInfo<IState, IChangeEvent>(_previousState, state, changes);
+            var info = new StateChangedInfo<IState, IChangeEvent>(_previousState.Copy(), state, changes);
             stateStream.OnNext(info);
             _previousState = state.Copy();
         }
@@ -70,6 +69,7 @@ namespace SelfStudio.ComposableArchitecture {
     }
 
     public class StateChangedInfo<IState, IChangeEvent> {
+        public long Timestamp { get; }
         public IState Previous { get; }
         public IState Current { get; }
         public IChangeEvent[] Changes { get; }
@@ -78,6 +78,7 @@ namespace SelfStudio.ComposableArchitecture {
             Previous = previous;
             Current = current;
             Changes = changes;
+            Timestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
         }
     }
 
