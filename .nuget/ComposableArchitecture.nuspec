@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>SelfStudio.ComposableArchitecture</id>
-        <version>0.0.17</version>
+        <version>0.0.20</version>
         <title>SelfStudio.ComposableArchitecture</title>
         <authors>LincolnLaw</authors>
         <owners>LincolnLaw</owners>
@@ -19,6 +19,7 @@
             <group targetFramework=".NETStandard2.1" />
             <group targetFramework=".net8.0" />
             <group targetFramework=".netcoreapp3.1" />
+            <group targetFramework=".net48" />
         </dependencies>
     </metadata>
     <files>
