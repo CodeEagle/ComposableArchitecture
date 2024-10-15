@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace SelfStudio.ComposableArchitecture {
     public delegate Task StoreDispatcher<Action>(Action action);
     public interface IComposableAction { }
+    public interface IComposableChangeEvent { }
+
 
     public class Store<IState, IAction, IChangeEvent> where IState : IStateCompatible<IState, IChangeEvent> {
         private readonly ILogicCompatible<IState, IAction> _logic;
