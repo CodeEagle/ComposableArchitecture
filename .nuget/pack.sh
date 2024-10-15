@@ -8,7 +8,7 @@ cd ..
 sed -i '' "s/<Version>.*<\/Version>/<Version>$VERSION<\/Version>/g" ComposableArchitecture.csproj
 echo "Publishing ComposableArchitecture..." 
 
-TARGET_ARRAY=("netstandard2.1" "net8.0" "netcoreapp3.1" "net48")
+TARGET_ARRAY=("netstandard2.1" "net8.0" "netcoreapp3.1" "net6.0")
 for TARGET in ${TARGET_ARRAY[@]};do
     dotnet publish -c Release -f $TARGET
     echo "Packing ComposableArchitecture..."

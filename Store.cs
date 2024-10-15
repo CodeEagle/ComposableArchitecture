@@ -2,22 +2,26 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-#pragma warning disable CS8632
+#pragma warning disable CS8632,CS0618
 
 namespace SelfStudio.ComposableArchitecture {
     public delegate Task StoreDispatcher<Action>(Action action);
+    public interface IComposableAction { }
 
     public class Store<IState, IAction, IChangeEvent> where IState : IStateCompatible<IState, IChangeEvent> {
         private readonly ILogicCompatible<IState, IAction> _logic;
         private IState _previousState;
         private readonly List<IMiddlewareCompatible<IState, IAction>> _middleware;
+        [Obsolete("stateStream will be removed in a future version. Use stateStream instead.")]
         public readonly Stream<StateChangedInfo<IState, IChangeEvent>> stateStream;
+        public readonly Action<StateChangedInfo<IState, IChangeEvent>> OnStateChanged;
 
         public Store(Func<ILogicCompatible<IState, IAction>> initialLogic, List<IMiddlewareCompatible<IState, IAction>>? middleware = null) {
             _logic = initialLogic();
             _middleware = middleware ?? new List<IMiddlewareCompatible<IState, IAction>>();
             _previousState = _logic.State.Copy();
             stateStream = new Stream<StateChangedInfo<IState, IChangeEvent>>();
+            OnStateChanged = (_) => { };
         }
 
         public async Task Send(IAction action) {
@@ -60,6 +64,7 @@ namespace SelfStudio.ComposableArchitecture {
             }
             var info = new StateChangedInfo<IState, IChangeEvent>(_previousState.Copy(), state, changes);
             stateStream.OnNext(info);
+            OnStateChanged(info);
             _previousState = state.Copy();
         }
 

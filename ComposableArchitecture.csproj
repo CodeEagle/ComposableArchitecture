@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net8.0;netcoreapp3.1;net48</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net8.0;netcoreapp3.1;net6.0</TargetFrameworks>
     <Nullable>enable</Nullable>
     <LangVersion>9.0</LangVersion>
     <PackageId>SelfStudio.ComposableArchitecture</PackageId>
-    <Version>0.0.20</Version>
+    <Version>0.0.21</Version>
     <Authors>LincolnLaw</Authors>
     <Company>SelfStudio</Company>
     <OutputType>Library</OutputType>
