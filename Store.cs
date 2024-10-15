@@ -14,7 +14,7 @@ namespace SelfStudio.ComposableArchitecture {
         private readonly List<IMiddlewareCompatible<IState, IAction>> _middleware;
         [Obsolete("stateStream will be removed in a future version. Use stateStream instead.")]
         public readonly Stream<StateChangedInfo<IState, IChangeEvent>> stateStream;
-        public readonly Action<StateChangedInfo<IState, IChangeEvent>> OnStateChanged;
+        public Action<StateChangedInfo<IState, IChangeEvent>> OnStateChanged;
 
         public Store(Func<ILogicCompatible<IState, IAction>> initialLogic, List<IMiddlewareCompatible<IState, IAction>>? middleware = null) {
             _logic = initialLogic();
