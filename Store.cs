@@ -65,9 +65,9 @@ namespace SelfStudio.ComposableArchitecture {
                 return;
             }
             var info = new StateChangedInfo<IState, IChangeEvent>(_previousState.Copy(), state, changes);
+            _previousState = state.Copy();
             stateStream.OnNext(info);
             OnStateChanged(info);
-            _previousState = state.Copy();
         }
 
         public void Dispose() {
