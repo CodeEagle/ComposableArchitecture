@@ -13,17 +13,28 @@ namespace SelfStudio.ComposableArchitecture {
     public class Store<IState, IAction, IChangeEvent> where IState : IStateCompatible<IState, IChangeEvent> {
         private readonly ILogicCompatible<IState, IAction> _logic;
         private IState _previousState;
+        private StateChangedInfo<IState, IChangeEvent> _currentState;
+        public StateChangedInfo<IState, IChangeEvent> StateChangedInfo => _currentState;
         private readonly List<IMiddlewareCompatible<IState, IAction>> _middleware;
-        [Obsolete("stateStream will be removed in a future version. Use stateStream instead.")]
+        [Obsolete("stateStream will be removed in a future version. Use AddHandler instead.")]
         public readonly Stream<StateChangedInfo<IState, IChangeEvent>> stateStream;
+        [Obsolete("OnStateChanged will be removed in a future version. Use AddHandler instead.")]
         public Action<StateChangedInfo<IState, IChangeEvent>> OnStateChanged;
+        private Dictionary<int, Action<StateChangedInfo<IState, IChangeEvent>>> _onStateChangedHandlers = new();
 
         public Store(Func<ILogicCompatible<IState, IAction>> initialLogic, List<IMiddlewareCompatible<IState, IAction>>? middleware = null) {
             _logic = initialLogic();
             _middleware = middleware ?? new List<IMiddlewareCompatible<IState, IAction>>();
             _previousState = _logic.State.Copy();
+            _currentState = new StateChangedInfo<IState, IChangeEvent>(_previousState.Copy(), _previousState.Copy(), Array.Empty<IChangeEvent>());
             stateStream = new Stream<StateChangedInfo<IState, IChangeEvent>>();
             OnStateChanged = (_) => { };
+        }
+
+        public HandlerDisposer AddHandler(Action<StateChangedInfo<IState, IChangeEvent>> handler) {
+            int id = handler.GetHashCode();
+            _onStateChangedHandlers.Add(id, handler);
+            return new HandlerDisposer(() => _onStateChangedHandlers.Remove(id));
         }
 
         public async Task Send(IAction action) {
@@ -66,8 +77,12 @@ namespace SelfStudio.ComposableArchitecture {
             }
             var info = new StateChangedInfo<IState, IChangeEvent>(_previousState.Copy(), state, changes);
             _previousState = state.Copy();
+            _currentState = info;
             stateStream.OnNext(info);
             OnStateChanged(info);
+            foreach (var handler in _onStateChangedHandlers.Values) {
+                handler(info);
+            }
         }
 
         public void Dispose() {
@@ -134,6 +149,18 @@ namespace SelfStudio.ComposableArchitecture {
                 if (_observer != null && _observers.Contains(_observer))
                     _observers.Remove(_observer);
             }
+        }
+
+
+    }
+    public class HandlerDisposer : IDisposable {
+        public Action onDispose;
+        public HandlerDisposer(Action dispose) {
+            onDispose = dispose;
+        }
+
+        public void Dispose() {
+            onDispose.Invoke();
         }
     }
 }
